@@ -58,4 +58,15 @@ resource "hcp_consul_cluster" "xx-2048-consul" {
   tier = "development"
 }
 
+# Vault
+
+resource "hcp_vault_cluster" "xx-2048-vault" {
+  hvn_id = hcp_hvn.xx-2048-hvn.hvn_id
+  cluster_id = var.id
+}
+
+resource "hcp_vault_cluster_admin_token" "xx-2048-vault-token" {
+  cluster_id = hcp_vault_cluster.xx-2048-vault.cluster_id
+}
+
 
