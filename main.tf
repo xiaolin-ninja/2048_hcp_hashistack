@@ -22,6 +22,9 @@ provider "aws" {
   region = var.region
 }
 
+provider "hcp" {
+}
+
 resource "aws_vpc" "peer" {
   cidr_block = "172.31.0.0/16"
 }
@@ -60,6 +63,12 @@ resource "hcp_consul_cluster" "xx-2048-consul" {
 
 # Vault
 
+provider "vault" {
+  address = hcp_vault_cluster.xx-2048-vault.vault_public_endpoint_url
+  namespace = "admin"
+  token = hcp_vault_cluster.xx-2048-vault-token.token
+}
+
 resource "hcp_vault_cluster" "xx-2048-vault" {
   hvn_id = hcp_hvn.xx-2048-hvn.hvn_id
   cluster_id = var.id
@@ -68,5 +77,4 @@ resource "hcp_vault_cluster" "xx-2048-vault" {
 resource "hcp_vault_cluster_admin_token" "xx-2048-vault-token" {
   cluster_id = hcp_vault_cluster.xx-2048-vault.cluster_id
 }
-
 
