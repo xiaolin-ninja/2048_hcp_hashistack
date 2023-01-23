@@ -77,7 +77,7 @@ resource "hcp_vault_cluster" "xx-2048-vault" {
 }
 
 resource "hcp_vault_cluster_admin_token" "xx-2048-vault-token" {
-  cluster_id = hcp_vault_cluster.demo_hcp_vault.cluster_id
+  cluster_id = hcp_vault_cluster.xx-2048-vault.cluster_id
 }
 
 # Nomad
