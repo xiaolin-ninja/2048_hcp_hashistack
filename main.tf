@@ -22,11 +22,6 @@ provider "aws" {
   region = var.region
 }
 
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  name = var.id 
-}
-
 resource "aws_vpc" "peer" {
   cidr_block = "172.31.0.0/16"
 }
@@ -55,12 +50,6 @@ resource "aws_vpc_peering_connection_accepter" "peer" {
   auto_accept               = true
 }
 
-resource "aws_route" "hvn_peering" {
-  route_table_id = module.vpc.public_route_table_ids[0]
-  destination_cidr_block = hcp_hvn.xx-2048-hvn.cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection_accepter.peer.id
-}
-
 # Consul
 
 resource "hcp_consul_cluster" "xx-2048-consul" {
@@ -69,22 +58,4 @@ resource "hcp_consul_cluster" "xx-2048-consul" {
   tier = "development"
 }
 
-# Vault
 
-resource "hcp_vault_cluster" "xx-2048-vault" {
-  hvn_id = hcp_hvn.xx-2048-hvn.hvn_id
-  cluster_id = var.id
-}
-
-resource "hcp_vault_cluster_admin_token" "xx-2048-vault-token" {
-  cluster_id = hcp_vault_cluster.xx-2048-vault.cluster_id
-}
-
-# Nomad
-
-module "nomad" {
-  source = "hashicorp/nomad/aws"
-  version = "0.6.3"
-  cluster_name = var.id
-  vpc_id = module.vpc.vpc_id
-}
