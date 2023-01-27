@@ -11,12 +11,6 @@ variable "registry_password" {
   env = ["REGISTRY_PASSWORD"]
 }
 
-variable "registry_imagename" {
-  type = string
-  default = ""
-  env = ["REGISTRY_IMAGENAME"]
-}
-
 variable "aws_region" {
   type = string
   default = ""
