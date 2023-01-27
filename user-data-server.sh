@@ -58,7 +58,7 @@ cat << EOCCF >/etc/consul.d/client.hcl
 "encrypt_verify_incoming" = true
 "encrypt_verify_outgoing" = true
 "log_level" = "INFO"
-"retry_join" = ["consul-xx-2048.private.consul.a9441286-a6b0-4a36-9b11-8ccf0809130b.aws.hashicorp.cloud"]
+"retry_join" = ["xx-2048-consul.private.consul.a9441286-a6b0-4a36-9b11-8ccf0809130b.aws.hashicorp.cloud"]
 "server" = false
 "ui" = true
 "verify_outgoing" = true
@@ -119,14 +119,14 @@ leave_on_interrupt = true
 leave_on_terminate = true
 server {
   enabled          = true
-  bootstrap_expect = 3
+  bootstrap_expect = 1
 }
 EONCF
 
 cat << EONVF >/etc/nomad.d/vault.hcl
 vault {
   enabled          = true
-  address          = "https://${vault_endpoint}:8200"
+  address          = "${vault_endpoint}"
   create_from_role = "nomad-cluster"
 }
 EONVF

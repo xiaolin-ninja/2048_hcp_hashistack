@@ -108,7 +108,7 @@ cat << EOCCF >/etc/consul.d/client.hcl
 "encrypt_verify_incoming" = true
 "encrypt_verify_outgoing" = true
 "log_level" = "INFO"
-"retry_join" = ["consul-xx-2048.consul.a9441286-a6b0-4a36-9b11-8ccf0809130b.aws.hashicorp.cloud"]
+"retry_join" = ["xx-2048-consul.consul.a9441286-a6b0-4a36-9b11-8ccf0809130b.aws.hashicorp.cloud"]
 "server" = false
 "ui" = true
 "verify_outgoing" = true
@@ -174,7 +174,7 @@ EONCF
 cat << EONVCF >/etc/nomad.d/vault.hcl
 vault {
   enabled = true
-  address = "https://${vault_endpoint}:8200"
+  address = "${vault_endpoint}"
 }
 EONVCF
 
