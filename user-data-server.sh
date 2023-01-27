@@ -52,16 +52,16 @@ cat << EOCCF >/etc/consul.d/client.hcl
 "auto_encrypt" = {
   "tls" = true
 }
-"ca_file" = "/var/lib/consul/ca.pem"
+"tls.defaults.ca_file" = "/var/lib/consul/ca.pem"
 "datacenter" = "xx-2048-consul"
 "encrypt" = "${consul_gossip_encrypt_key}"
 "encrypt_verify_incoming" = true
 "encrypt_verify_outgoing" = true
 "log_level" = "INFO"
-"retry_join" = ["xx-2048-consul.private.consul.a9441286-a6b0-4a36-9b11-8ccf0809130b.aws.hashicorp.cloud"]
+"retry_join" = ["${consul_private_endpoint_url}"] 
 "server" = false
-"ui" = true
-"verify_outgoing" = true
+"ui_config.enabled" = true
+"tls.defaults.verify_outgoing" = true
 advertise_addr = "{{ GetPrivateIP }}"
 client_addr =  "0.0.0.0"
 data_dir = "/var/lib/consul"

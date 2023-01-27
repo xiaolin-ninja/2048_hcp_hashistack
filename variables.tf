@@ -60,10 +60,9 @@ variable "spot_price" {
   default     = null
 }
 
-variable "allowed_inbound_cidr_blocks" {
-  description = "A list of CIDR-formatted IP address ranges from which the EC2 Instances will allow connections to Consul"
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+variable "public_subnet" {
+  description = "The ID of the public subnet in which the runtime cluster will be deployed"
+  default = "subnet-0b63522bd122d750a"
 }
 
 variable "nomad_datacenter" {
