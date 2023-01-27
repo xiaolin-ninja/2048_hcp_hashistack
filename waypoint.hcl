@@ -23,14 +23,18 @@ variable "aws_region" {
   env = ["TF_VAR_region"]
 }
 
-project = "hc-lab-hat-hat-demo"
+project = "2048-hashistack"
 
-app "dev" {
+app "nomad" {
+#  runner {
+#    profile = "nomad-runner"
+#  }
+
   build {
     use "docker" {}
     registry {
       use "docker" {
-        image = "${var.registry_username}/${var.registry_imagename}"
+        image = "shxxu0212/wp-test"
         tag = "dev"
         local = false
         auth {
@@ -42,91 +46,9 @@ app "dev" {
   }
 
   deploy {
-    use "docker" {
-      service_port = 3000
-      static_environment = {
-        PLATFORM = "docker (dev)"
-      }
+    use "nomad" {
     }
   }
 }
 
-app "ecs" {
-  runner {
-    profile = "ecs-ECS-RUNNER"
-  }
 
-  build {
-    use "docker" {}
-    registry {
-      use "docker" {
-        image = "${var.registry_username}/${var.registry_imagename}"
-        tag = "testing"
-        local = false
-        auth {
-          username = var.registry_username
-          password = var.registry_password
-        }
-      }
-    }
-  }
-
-  deploy {
-    use "aws-ecs" {
-      service_port = 3000
-      static_environment = {
-        PLATFORM = "aws-ecs (ca-central)"
-      }
-      region = var.aws_region
-      memory = 512
-    }
-  }
-}
-
-// app "kubernetes" {
-//   runner {
-//     profile = "kubernetes-KUBE-RUNNER"
-//   }
-
-//   build {
-//     use "docker" {}
-//     registry {
-//       use "docker" {
-//         image = "${var.registry_username}/${var.registry_imagename}"
-//         tag = "testing"
-//         local = false
-//         auth {
-//           username = var.registry_username
-//           password = var.registry_password
-//         }
-//       }
-//     }
-//   }
-
-//   deploy {
-//     use "kubernetes" {
-//       probe_path = "/"
-//       service_port = 3000
-//       static_environment = {
-//         PLATFORM = "kubernetes (us-west)"
-//       }
-//       memory {
-//         request = "64Mi"
-//         limit   = "128Mi"
-//       }
-
-//       autoscale {
-//         min_replicas = 1
-//         max_replicas = 5
-//         cpu_percent = 20
-//       }
-//     }
-//   }
-
-//   release {
-//     use "kubernetes" {
-//       load_balancer = true
-//       port          = 3000
-//     }
-//   }
-// }
