@@ -47,6 +47,7 @@ app "nomad" {
 
   deploy {
     use "nomad" {
+      datacenter = "xx-2048-consul"
     }
   }
 }
