@@ -103,7 +103,7 @@ cat << EOCCF >/etc/consul.d/client.hcl
   "tls" = true
 }
 "tls.defaults.ca_file" = "/var/lib/consul/ca.pem"
-"datacenter" = "xx-consul-2048"
+"datacenter" = "xx-2048-consul"
 "encrypt" = "${consul_gossip_encrypt_key}"
 "encrypt_verify_incoming" = true
 "encrypt_verify_outgoing" = true
@@ -157,7 +157,8 @@ CONSUL_HTTP_TOKEN=${consul_acl_token}
 VAULT_NAMESPACE=admin
 EONEF
 
-mkdir -p /etc/nomad.d/
+mkdir -p /etc/nomad.d/data
+
 cat << EONCF >/etc/nomad.d/client.hcl
 bind_addr          = "0.0.0.0"
 region             = "${nomad_region}"
@@ -168,7 +169,12 @@ leave_on_interrupt = true
 leave_on_terminate = true
 client {
   enabled = true
+  host_volume "wp_runner" {
+    path = "/etc/nomad.d/data/"
+    read_only = false
+  }
 }
+
 EONCF
 
 cat << EONVCF >/etc/nomad.d/vault.hcl

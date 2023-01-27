@@ -88,6 +88,7 @@ resource "aws_launch_template" "nomad-servers" {
     consul_ca_file            = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
     consul_gossip_encrypt_key = jsondecode(base64decode(hcp_consul_cluster.xx_2048_consul.consul_config_file)).encrypt,
     consul_acl_token          = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
+    consul_private_endpoint_url = hcp_consul_cluster.xx_2048_consul.consul_private_endpoint_url,
     vault_endpoint            = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
     vault_token               = vault_token.nomad_server.client_token
   }))
@@ -98,9 +99,9 @@ resource "aws_autoscaling_group" "nomad-servers" {
   name                = "2048 Hashistack servers"
   vpc_zone_identifier = module.vpc.public_subnets
 
-  desired_capacity = 3
+  desired_capacity = 1
   max_size         = 3
-  min_size         = 3
+  min_size         = 1
 
   launch_template {
     id      = aws_launch_template.nomad-servers.id
@@ -158,6 +159,7 @@ resource "aws_launch_template" "nomad-clients" {
     consul_ca_file            = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
     consul_gossip_encrypt_key = jsondecode(base64decode(hcp_consul_cluster.xx_2048_consul.consul_config_file)).encrypt,
     consul_acl_token          = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
+    consul_private_endpoint_url = hcp_consul_cluster.xx_2048_consul.consul_private_endpoint_url,
     vault_endpoint            = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
   }))
 
@@ -167,9 +169,9 @@ resource "aws_autoscaling_group" "nomad-clients" {
   name                = "2048 Hashistack Clients"
   vpc_zone_identifier = module.vpc.public_subnets
 
-  desired_capacity = 3
+  desired_capacity = 1
   max_size         = 3
-  min_size         = 3
+  min_size         = 1
 
   launch_template {
     id      = aws_launch_template.nomad-clients.id
