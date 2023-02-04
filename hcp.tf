@@ -1,9 +1,5 @@
 provider "hcp" {}
    
-provider "aws" {
-   region = var.region
-} 
-
 resource "hcp_hvn" "xx_2048_hvn" {
   hvn_id         = "xx-2048"
   cloud_provider = "aws"
@@ -12,7 +8,7 @@ resource "hcp_hvn" "xx_2048_hvn" {
 
 resource "hcp_aws_network_peering" "peer" {
   hvn_id          = hcp_hvn.xx_2048_hvn.hvn_id
-  peering_id      = "nomad"
+  peering_id      = "hcp-hashistack"
   peer_vpc_id     = module.vpc.vpc_id
   peer_account_id = module.vpc.vpc_owner_id
   peer_vpc_region = var.region
