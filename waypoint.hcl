@@ -11,34 +11,9 @@ variable "registry_password" {
   env = ["REGISTRY_PASSWORD"]
 }
 
-variable "aws_region" {
-  type = string
-  default = ""
-  env = ["TF_VAR_region"]
-}
-
 project = "2048-hashistack"
 
-pipeline "alb-deploy" {
-  step "build" {
-    use "build" {}
-  }
-
-  step "deploy" {
-    use "deploy" {}
-  }
-
-  step "release" {
-    use "release" {
-    }
-  }
-}
-
 app "nomad" {
-#  runner {
-#    profile = "nomad-runner"
-#  }
-
   build {
     use "docker" {}
     registry {
