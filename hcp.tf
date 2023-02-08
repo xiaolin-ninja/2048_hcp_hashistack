@@ -1,5 +1,5 @@
 provider "hcp" {}
-   
+
 resource "hcp_hvn" "xx_2048_hvn" {
   hvn_id         = "xx-2048"
   cloud_provider = "aws"

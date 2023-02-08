@@ -2,8 +2,8 @@
 
 
 variable "region" {
-  type        = string
-  default     = "us-east-1"
+  type    = string
+  default = "us-east-1"
 }
 
 variable "name" {
@@ -26,8 +26,8 @@ variable "cidr" {
 # Compute 
 
 variable "ami_id" {
-  type        = string
-  default     = null
+  type    = string
+  default = null
 }
 
 variable "cluster_name" {
@@ -62,7 +62,7 @@ variable "spot_price" {
 
 variable "public_subnet" {
   description = "The ID of the public subnet in which the runtime cluster will be deployed"
-  default = "subnet-0b63522bd122d750a"
+  default     = "subnet-0b63522bd122d750a"
 }
 
 variable "nomad_datacenter" {

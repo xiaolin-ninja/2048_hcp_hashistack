@@ -83,14 +83,14 @@ resource "aws_launch_template" "nomad-servers" {
   }
 
   user_data = base64encode(templatefile("user-data-server.sh", {
-    nomad_region              = var.region,
-    nomad_datacenter          = var.cluster_name,
-    consul_ca_file            = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
-    consul_gossip_encrypt_key = jsondecode(base64decode(hcp_consul_cluster.xx_2048_consul.consul_config_file)).encrypt,
-    consul_acl_token          = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
+    nomad_region                = var.region,
+    nomad_datacenter            = var.cluster_name,
+    consul_ca_file              = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
+    consul_gossip_encrypt_key   = jsondecode(base64decode(hcp_consul_cluster.xx_2048_consul.consul_config_file)).encrypt,
+    consul_acl_token            = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
     consul_private_endpoint_url = hcp_consul_cluster.xx_2048_consul.consul_private_endpoint_url,
-    vault_endpoint            = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
-    vault_token               = vault_token.nomad_server.client_token
+    vault_endpoint              = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
+    vault_token                 = vault_token.nomad_server.client_token
   }))
 
 }
@@ -154,13 +154,13 @@ resource "aws_launch_template" "nomad-clients" {
   }
 
   user_data = base64encode(templatefile("user-data-client.sh", {
-    nomad_region              = var.region,
-    nomad_datacenter          = var.cluster_name,
-    consul_ca_file            = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
-    consul_gossip_encrypt_key = jsondecode(base64decode(hcp_consul_cluster.xx_2048_consul.consul_config_file)).encrypt,
-    consul_acl_token          = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
+    nomad_region                = var.region,
+    nomad_datacenter            = var.cluster_name,
+    consul_ca_file              = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
+    consul_gossip_encrypt_key   = jsondecode(base64decode(hcp_consul_cluster.xx_2048_consul.consul_config_file)).encrypt,
+    consul_acl_token            = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
     consul_private_endpoint_url = hcp_consul_cluster.xx_2048_consul.consul_private_endpoint_url,
-    vault_endpoint            = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
+    vault_endpoint              = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
   }))
 
 }
