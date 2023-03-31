@@ -1,7 +1,9 @@
 provider "vault" {
-  address   = hcp_vault_cluster.xx_2048_vault.vault_public_endpoint_url
-  namespace = "admin"
-  token     = hcp_vault_cluster_admin_token.xx_2048_vault_token.token
+  address                = hcp_vault_cluster.xx_2048_vault.vault_public_endpoint_url
+  namespace              = "admin"
+  token                  = hcp_vault_cluster_admin_token.xx_2048_vault_token.token
+  skip_child_token       = true
+  skip_get_vault_version = true
 }
 
 data "http" "nomad_server_policy" {
