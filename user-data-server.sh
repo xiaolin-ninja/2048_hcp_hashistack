@@ -43,28 +43,17 @@ mv nomad /usr/local/bin/nomad
 
 mkdir -p /etc/consul.d
 mkdir -p /var/lib/consul
-cat << EOCCF >/etc/consul.d/client.hcl
-"acl" = {
-  "default_policy" = "deny"
-  "down_policy" = "async-cache"
-  "enabled" = true
+cat << EOCCF >/etc/consul.d/client.json
+${consul_config_file}
+EOCCF
+
+cat << EOCCF >/etc/consul.d/client_extra.hcl
+"tls" = {
+  "defaults" = {
+    "ca_file" = "/var/lib/consul/ca.pem"
+    }
 }
-"auto_encrypt" = {
-  "tls" = true
-}
-"tls.defaults.ca_file" = "/var/lib/consul/ca.pem"
-"datacenter" = "xx-2048-consul"
-"encrypt" = "${consul_gossip_encrypt_key}"
-"encrypt_verify_incoming" = true
-"encrypt_verify_outgoing" = true
-"log_level" = "INFO"
-"retry_join" = ["${consul_private_endpoint_url}"] 
-"server" = false
-"ui_config.enabled" = true
-"tls.defaults.verify_outgoing" = true
-advertise_addr = "{{ GetPrivateIP }}"
-client_addr =  "0.0.0.0"
-data_dir = "/var/lib/consul"
+"data_dir" = "/var/lib/consul"
 EOCCF
 
 cat << EOCACF >/etc/consul.d/acl.hcl
@@ -88,7 +77,7 @@ Requires=network-online.target
 After=network-online.target
 [Service]
 Type=notify
-ExecStart=/usr/local/bin/consul agent -config-dir=/etc/consul.d/
+ExecStart=/usr/local/bin/consul agent -config-dir=/etc/consul.d/ -advertise '{{ GetAllInterfaces | include "name" "^ens" | include "flags" "forwardable|up" | attr "address" }}'
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGTERM
@@ -120,6 +109,12 @@ leave_on_terminate = true
 server {
   enabled          = true
   bootstrap_expect = 1
+}
+acl {
+  enabled    = true
+  token_ttl  = "30s"
+  policy_ttl = "60s"
+  role_ttl   = "60s"
 }
 EONCF
 
