@@ -1,8 +1,6 @@
 data "aws_ami" "base" {
   most_recent = true
-
-  # If we change the AWS Account in which test are run, update this value.
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
 
   filter {
     name   = "virtualization-type"
@@ -60,6 +58,9 @@ resource "aws_launch_template" "nomad-servers" {
   instance_initiated_shutdown_behavior = "terminate"
 
   instance_type = "t3.medium"
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.nomad_server.arn
+  }
 
   metadata_options {
     http_endpoint               = "enabled"
@@ -89,7 +90,7 @@ resource "aws_launch_template" "nomad-servers" {
     consul_ca_file     = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
     consul_acl_token   = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
     vault_endpoint     = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
-    vault_token        = vault_token.nomad_server.client_token
+    aws_role           = vault_aws_auth_backend_role.nomad_server.role
   }))
 
 }
@@ -115,6 +116,11 @@ resource "aws_lb_target_group" "nomad-servers" {
   port     = 4646
   protocol = "TCP"
   vpc_id   = module.vpc.vpc_id
+
+  health_check {
+    port     = 4646
+    protocol = "TCP"
+  }
 }
 
 data "aws_subnets" "subnet_ids" {
@@ -156,8 +162,8 @@ resource "aws_lb_listener" "nomad-servers" {
 }
 
 
-output "nomad_servers_dns" {
-  value = aws_lb.nomad-servers.dns_name
+output "nomad_servers_http" {
+  value = "https://${aws_lb.nomad-servers.dns_name}:4646"
 }
 #------------------------
 
@@ -179,6 +185,9 @@ resource "aws_launch_template" "nomad-clients" {
   instance_initiated_shutdown_behavior = "terminate"
 
   instance_type = "t3.medium"
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.nomad_client.arn
+  }
 
   metadata_options {
     http_endpoint               = "enabled"
@@ -208,6 +217,7 @@ resource "aws_launch_template" "nomad-clients" {
     consul_ca_file     = base64decode(hcp_consul_cluster.xx_2048_consul.consul_ca_file),
     consul_acl_token   = hcp_consul_cluster.xx_2048_consul.consul_root_token_secret_id,
     vault_endpoint     = hcp_vault_cluster.xx_2048_vault.vault_private_endpoint_url,
+    aws_role           = vault_aws_auth_backend_role.nomad_client.role
   }))
 
 }
