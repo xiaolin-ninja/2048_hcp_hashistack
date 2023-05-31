@@ -46,8 +46,9 @@ resource "hcp_vault_cluster_admin_token" "xx_2048_vault_token" {
 }
 
 resource "hcp_consul_cluster" "xx_2048_consul" {
-  hvn_id          = hcp_hvn.xx_2048_hvn.hvn_id
-  cluster_id      = "xx-2048-consul"
-  tier            = "development"
-  public_endpoint = true
+  hvn_id             = hcp_hvn.xx_2048_hvn.hvn_id
+  cluster_id         = "xx-2048-consul"
+  tier               = "development"
+  min_consul_version = "v1.15.2"
+  public_endpoint    = true
 }
